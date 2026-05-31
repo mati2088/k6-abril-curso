@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K6 Test Report - 2026-05-27T23-20-30-291Z</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0d1117;
+            color: #e6edf3;
+            padding: 20px;
+        }
+        .header {
+            background: linear-gradient(135deg, #1a1f35, #2d1b69);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 24px;
+            border: 1px solid #30363d;
+        }
+        .header h1 {
+            font-size: 28px;
+            background: linear-gradient(90deg, #58a6ff, #bc8cff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header p { color: #8b949e; margin-top: 8px; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .card h3 {
+            font-size: 13px;
+            color: #8b949e;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .card .value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #58a6ff;
+        }
+        .card .value.success { color: #3fb950; }
+        .card .value.warning { color: #d29922; }
+        .card .value.danger { color: #f85149; }
+        .chart-container {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .chart-container h2 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: #e6edf3;
+        }
+        .chart-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        @media (max-width: 900px) {
+            .chart-row { grid-template-columns: 1fr; }
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+        th, td {
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid #21262d;
+        }
+        th {
+            color: #8b949e;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        td { color: #e6edf3; }
+        .status-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-pass { background: #0d3520; color: #3fb950; }
+        .status-fail { background: #3d1216; color: #f85149; }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #484f58;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>K6 Performance Test Report</h1>
+        <p>Generado: 05/27/2026, 20:20:30</p>
+        <p>Endpoint: POST /auth/registro</p>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h3>Total Requests</h3>
+            <div class="value">246</div>
+        </div>
+        <div class="card">
+            <h3>Request Rate</h3>
+            <div class="value">23.63/s</div>
+        </div>
+        <div class="card">
+            <h3>Avg Response Time</h3>
+            <div class="value success">227ms</div>
+        </div>
+        <div class="card">
+            <h3>P95 Response Time</h3>
+            <div class="value success">278ms</div>
+        </div>
+        <div class="card">
+            <h3>Checks Passed</h3>
+            <div class="value success">100.0%</div>
+        </div>
+        <div class="card">
+            <h3>Failed Requests</h3>
+            <div class="value success">0.0%</div>
+        </div>
+        <div class="card">
+            <h3>VUs (max)</h3>
+            <div class="value">8</div>
+        </div>
+        <div class="card">
+            <h3>Iterations</h3>
+            <div class="value">246</div>
+        </div>
+    </div>
+
+    <div class="chart-row">
+        <div class="chart-container">
+            <h2>Response Time Breakdown (ms)</h2>
+            <canvas id="responseTimeChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <h2>Response Time Percentiles (ms)</h2>
+            <canvas id="percentileChart"></canvas>
+        </div>
+    </div>
+
+    <div class="chart-row">
+        <div class="chart-container">
+            <h2>Request Phases (ms)</h2>
+            <canvas id="phasesChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <h2>Success vs Failures</h2>
+            <canvas id="successChart"></canvas>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <h2>Data Transfer</h2>
+        <canvas id="dataChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <h2>Detailed Metrics</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>Avg</th>
+                    <th>Min</th>
+                    <th>Med</th>
+                    <th>Max</th>
+                    <th>P90</th>
+                    <th>P95</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>http_req_duration</td>
+                    <td>227.45ms</td>
+                    <td>192.27ms</td>
+                    <td>209.13ms</td>
+                    <td>727.31ms</td>
+                    <td>258.38ms</td>
+                    <td>277.98ms</td>
+                </tr>
+                <tr>
+                    <td>http_req_waiting</td>
+                    <td>227.00ms</td>
+                    <td>192.27ms</td>
+                    <td>208.90ms</td>
+                    <td>726.74ms</td>
+                    <td>258.38ms</td>
+                    <td>277.82ms</td>
+                </tr>
+                <tr>
+                    <td>http_req_connecting</td>
+                    <td>0.62ms</td>
+                    <td>0.00ms</td>
+                    <td>0.00ms</td>
+                    <td>19.31ms</td>
+                    <td>0.00ms</td>
+                    <td>0.00ms</td>
+                </tr>
+                <tr>
+                    <td>http_req_blocked</td>
+                    <td>1.95ms</td>
+                    <td>0.00ms</td>
+                    <td>0.00ms</td>
+                    <td>77.17ms</td>
+                    <td>0.00ms</td>
+                    <td>0.00ms</td>
+                </tr>
+                <tr>
+                    <td>http_req_sending</td>
+                    <td>0.27ms</td>
+                    <td>0.00ms</td>
+                    <td>0.32ms</td>
+                    <td>2.21ms</td>
+                    <td>0.57ms</td>
+                    <td>0.64ms</td>
+                </tr>
+                <tr>
+                    <td>http_req_receiving</td>
+                    <td>0.18ms</td>
+                    <td>0.00ms</td>
+                    <td>0.00ms</td>
+                    <td>3.67ms</td>
+                    <td>0.71ms</td>
+                    <td>1.04ms</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="footer">
+        <p>Report generated by k6 + Custom HTML Reporter</p>
+    </div>
+
+    <script>
+        Chart.defaults.color = '#8b949e';
+        Chart.defaults.borderColor = '#21262d';
+
+        // Response Time Bar Chart
+        new Chart(document.getElementById('responseTimeChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Avg', 'Min', 'Med', 'Max'],
+                datasets: [{
+                    label: 'Duration (ms)',
+                    data: [227.45095934959352, 192.2686, 209.1262, 727.3061],
+                    backgroundColor: ['#58a6ff', '#3fb950', '#d29922', '#f85149'],
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, grid: { color: '#21262d' } }, x: { grid: { display: false } } }
+            }
+        });
+
+        // Percentile Chart
+        new Chart(document.getElementById('percentileChart'), {
+            type: 'line',
+            data: {
+                labels: ['Min', 'P50 (Med)', 'P90', 'P95', 'Max'],
+                datasets: [{
+                    label: 'Response Time (ms)',
+                    data: [192.2686, 209.1262, 258.37874999999997, 277.97935, 727.3061],
+                    borderColor: '#bc8cff',
+                    backgroundColor: 'rgba(188, 140, 255, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#bc8cff',
+                    pointRadius: 5,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, grid: { color: '#21262d' } }, x: { grid: { display: false } } }
+            }
+        });
+
+        // Request Phases Stacked Bar
+        new Chart(document.getElementById('phasesChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Blocked', 'Connecting', 'Sending', 'Waiting', 'Receiving'],
+                datasets: [{
+                    label: 'Avg (ms)',
+                    data: [1.9519418699186992, 0.6249979674796747, 0.26894024390243904, 227.00051056910578, 0.18150853658536586],
+                    backgroundColor: ['#8b949e', '#d29922', '#58a6ff', '#bc8cff', '#3fb950'],
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                indexAxis: 'y',
+                plugins: { legend: { display: false } },
+                scales: { x: { beginAtZero: true, grid: { color: '#21262d' } }, y: { grid: { display: false } } }
+            }
+        });
+
+        // Success/Failure Doughnut
+        const passRate = 100;
+        new Chart(document.getElementById('successChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Passed', 'Failed'],
+                datasets: [{
+                    data: [passRate, 100 - passRate],
+                    backgroundColor: ['#3fb950', '#f85149'],
+                    borderWidth: 0,
+                }]
+            },
+            options: {
+                responsive: true,
+                cutout: '70%',
+                plugins: {
+                    legend: { position: 'bottom' },
+                }
+            }
+        });
+
+        // Data Transfer Chart
+        new Chart(document.getElementById('dataChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Data Received', 'Data Sent'],
+                datasets: [{
+                    label: 'Bytes',
+                    data: [99988, 69140],
+                    backgroundColor: ['#58a6ff', '#bc8cff'],
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, grid: { color: '#21262d' } }, x: { grid: { display: false } } }
+            }
+        });
+    </script>
+</body>
+</html>
