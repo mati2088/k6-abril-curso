@@ -23,3 +23,10 @@ jobs:
           sudo apt-get install k6 -y
       - name: ejecutar archivo de registrarUsuario
         run: k6 run registrarUsuario.js
+
+      - name: Subir reporte
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: k6-reporte
+          path: reporte/*.html
