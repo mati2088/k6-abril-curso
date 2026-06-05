@@ -53,7 +53,7 @@ const selectedScenario = __ENV.SCENARIO;
 export const options = {
     scenarios: selectedScenario ? { [selectedScenario]: scenarios[selectedScenario] } : scenarios,
     thresholds: {
-        http_req_duration: ['p(99)<1'], // 99% de las respuestas deben ser menores a 3000ms
+        http_req_duration: ['p(99)<3000'], // 99% de las respuestas deben ser menores a 3000ms
     },
 }
 
