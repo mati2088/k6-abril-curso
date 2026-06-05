@@ -1,6 +1,6 @@
 import http from 'k6/http';
 import { sleep, check } from 'k6';
-import {Rate} from 'k6/metrics';
+import { Rate } from 'k6/metrics';
 import { generarReporteHTML } from './reporte/generarReporte.js';
 
 /*
@@ -16,13 +16,13 @@ curl -X 'POST' \
 }'
 */
 
-const BASE_URL= 'https://homebanking-demo.onrender.com'
+const BASE_URL = 'https://homebanking-demo.onrender.com'
 const ENDPOINT = '/auth/registro'
 
-function generarPayload(){
+function generarPayload() {
     const id = `${__VU}_${__ITER}_${Date.now()}`;
     return JSON.stringify({
-        email : `user_${id}@gmail.com`,
+        email: `user_${id}@gmail.com`,
         name: `Usuario ${id}`,
         password: 'rodo123',
         username: `user_${id}`
@@ -30,7 +30,7 @@ function generarPayload(){
 }
 
 const HEADERS = {
-    headers:{
+    headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
     }
@@ -38,27 +38,13 @@ const HEADERS = {
 
 //escenario de prueba de carga
 const scenarios = {
-    load:{
+    load: {
         executor: 'constant-arrival-rate',
         rate: 5000,
         timeUnit: '1s',
         duration: '30s',
-        preAllocatedVUs:5,
+        preAllocatedVUs: 5,
         maxVUs: 3000
-    },
-    stress:{
-        executor: 'ramping-arrival-rate',
-        startRate:10,
-        timeUnit: '1s',
-        preAllocatedVUs:5,
-        maxVUs: 30,
-        stages:[
-            {duration: '10s', target:5},
-            {duration: '10s', target:15},
-            {duration: '10s', target:30},
-            {duration: '10s', target:25},
-            {duration: '10s', target:5},
-        ]
     }
 };
 
@@ -70,12 +56,12 @@ export const options = {
 
 
 
-export default function(){
+export default function () {
     const payload = generarPayload();
     const res = http.post(`${BASE_URL}${ENDPOINT}`, payload, HEADERS);
 
-    check(res,{
-        'status code 200': (r) => r.status ===200,
+    check(res, {
+        'status code 200': (r) => r.status === 200,
         'responde en menos de 3s': (r) => r.timings.duration < 3000,
     })
     console.log(res.body)
