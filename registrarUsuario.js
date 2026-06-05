@@ -40,7 +40,7 @@ const HEADERS = {
 const scenarios = {
     load: {
         executor: 'constant-arrival-rate',
-        rate: 5000,
+        rate: 5,
         timeUnit: '1s',
         duration: '30s',
         preAllocatedVUs: 5,
@@ -51,7 +51,10 @@ const scenarios = {
 const selectedScenario = __ENV.SCENARIO;
 
 export const options = {
-    scenarios: selectedScenario ? { [selectedScenario]: scenarios[selectedScenario] } : scenarios
+    scenarios: selectedScenario ? { [selectedScenario]: scenarios[selectedScenario] } : scenarios,
+    thresholds: {
+        http_req_duration: ['p(99)<1'], // 99% de las respuestas deben ser menores a 3000ms
+    },
 }
 
 
