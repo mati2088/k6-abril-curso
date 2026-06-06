@@ -21,8 +21,12 @@ jobs:
           echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
           sudo apt-get update
           sudo apt-get install k6 -y
-      - name: ejecutar archivo de registrarUsuario
-        run: k6 run registrarUsuario.js
+      - name: ejecutar tests en carpeta tests
+        run: |
+          for file in ./tests/*.js; do 
+            echo "Ejecutando: $file"; 
+            k6 run $file; 
+          done
 
       - name: Subir reporte
         if: always()

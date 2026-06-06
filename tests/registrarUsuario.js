@@ -1,7 +1,7 @@
 import http from 'k6/http';
 import { sleep, check } from 'k6';
 import { Rate } from 'k6/metrics';
-import { generarReporteHTML } from './reporte/generarReporte.js';
+import { generarReporteHTML } from '../reporte/generarReporte.js';
 
 /*
 curl -X 'POST' \
